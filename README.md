@@ -8,7 +8,7 @@ A hands-on **RTL-to-GDS VLSI project** focused on the design, verification, synt
 
 The project is based on the proposed study **“Comparative Study of Fast and Low-Power Adder Architectures from RTL to GDS using SKY130 Technology.”** The objective is to understand how architectural differences affect **power, performance, area, timing, routing, congestion, buffering, and parasitic effects** from RTL through physical implementation. fileciteturn9file0L19-L39
 
-> **Project status:** RCA and CLA RTL implementations are currently present in this repository. KSA is the next architecture being added. The full RTL-to-GDS flow and multi-bit-width study are planned stages of the project.
+> **Project status:** RCA, CLA, and KSA 4-bit implementations are present, including RTL, testbenches, gate-level/synthesized artifacts, waveforms, and Yosys visualizations. The full RTL-to-GDS flow and multi-bit-width study remain planned stages.
 
 ---
 
@@ -50,7 +50,7 @@ The project synopsis specifies a common RTL-to-GDS methodology using **SkyWater 
 |---|---:|---:|---:|
 | Ripple Carry Adder (RCA) | ✅ 4-bit | ✅ Testbench + waveform | 🔄 Planned |
 | Carry Look-Ahead Adder (CLA) | ✅ 4-bit | ✅ Exhaustive 512-case test | 🔄 Planned |
-| Kogge–Stone Adder (KSA) | 🔄 To be added | 🔄 Planned | 🔄 Planned |
+| Kogge–Stone Adder (KSA) | ✅ 4-bit | ✅ Testbench + waveform | 🔄 Planned |
 
 The long-term study targets multiple widths such as **4, 8, 16, 32, and 64 bits** to analyze how architecture and bit-width scaling affect PPA and physical characteristics. fileciteturn9file0L113-L124
 
@@ -77,6 +77,12 @@ The RCA provides a simple baseline architecture against which faster carry-compu
 - `RAC/RAC_4bit_tb.v` — testbench
 - `RAC/output.vcd` — simulation waveform
 - `RAC/rac_4bit_tb.vcd` — waveform dump
+- `RAC/RAC_1bit.v` — 1-bit RCA building block
+- `RAC/RAC_1bit_gatelvl.v` — gate-level 1-bit implementation
+- `RAC/RAC_1bit_synth.v` — synthesized 1-bit netlist
+- `RAC/RAC_4bit_gatelvl.v` — gate-level 4-bit implementation
+- `RAC/RAC_4bit_synth.v` — synthesized 4-bit netlist
+- `RAC/RAC_4bit.yosys_show.png` — Yosys visualization
 
 ---
 
@@ -93,13 +99,16 @@ G_i = A_i AND B_i
 
 The carry equations are expanded so that carries can be calculated using combinational logic rather than waiting for the carry to ripple through every previous stage.
 
-The current implementation is a **gate-level Verilog CLA** using XOR, AND, OR, and buffer primitives.
+The current implementation is a **4-bit gate-level Verilog CLA** using XOR, AND, OR, and buffer primitives. Gate-level and synthesized artifacts are also present.
 
 ### Current Files
 
 - `CLA/CLA_4bit.v` — 4-bit gate-level CLA
 - `CLA/CLA_4bit_tb.v` — exhaustive testbench
 - `CLA/CLA_4bit_gate_level.vcd` — simulation waveform
+- `CLA/CLA_4bit_gatelvl.v` — gate-level implementation
+- `CLA/CLA_4bit_synth.v` — synthesized netlist
+- `CLA/CLA_4bit_gatelvl.yosys_show.png` — Yosys visualization
 
 ### Verification
 
@@ -121,21 +130,11 @@ The generated result is compared against the expected 5-bit result:
 
 The **Kogge–Stone Adder** is a parallel-prefix adder architecture designed for fast carry computation using a prefix tree.
 
-The project synopsis specifically includes KSA as the third architecture and includes an **8-bit Kogge–Stone block diagram** as part of the proposed architecture study. fileciteturn9file0L145-L165
+The project synopsis includes KSA as the third architecture, while the repository currently contains the 4-bit implementation.
 
-### Planned Implementation
+### Current Implementation
 
-The KSA development will include:
-
-- Structural Verilog implementation
-- Prefix generate/propagate network
-- Carry computation
-- Sum generation
-- Dedicated testbench
-- Exhaustive functional verification
-- VCD waveform generation
-- Multiple-width implementations
-- Comparison against RCA and CLA
+The repository currently contains the 4-bit KSA RTL, testbench, gate-level implementation, synthesized netlist, waveform, and Yosys visualization. The implementation uses a prefix generate/propagate network for parallel carry computation.
 
 ### KSA Concept
 
@@ -341,12 +340,25 @@ mega_project_2026/
 │   └── a.out
 │
 ├── RAC/
+│   ├── RAC_1bit.v
+│   ├── RAC_1bit_gatelvl.v
+│   ├── RAC_1bit_synth.v
 │   ├── RAC_4bit.v
 │   ├── RAC_4bit_tb.v
 │   ├── output.vcd
 │   ├── rac_4bit_tb.vcd
 │   └── a.out
 │
+├── KSA/
+│   ├── KSA_4bit.v
+│   ├── KSA_4bit_tb.v
+│   ├── KSA_4bit_gatelvl.v
+│   ├── KSA_4bit_synth.v
+│   ├── KSA_4bit.yosys_show.png
+│   ├── kogge_stone_4bit.vcd
+│   └── a.out
+│
+├── sky130_fd_sc_hd__tt_025C_1v80.lib
 └── README.md
 ```
 
@@ -470,11 +482,15 @@ The project synopsis describes these outputs as part of the intended reproducibl
 - [x] CLA 4-bit RTL
 - [x] CLA 4-bit exhaustive verification
 - [x] CLA simulation waveform
-- [ ] KSA RTL
-- [ ] KSA testbench
-- [ ] KSA verification
+- [x] KSA 4-bit RTL
+- [x] KSA testbench
+- [x] KSA verification
+- [x] KSA gate-level implementation
+- [x] KSA synthesized netlist
+- [x] KSA waveform and Yosys visualization
 - [ ] Multi-width implementations
-- [ ] Yosys synthesis flow
+- [x] Yosys synthesis artifacts
+- [ ] Standardized Yosys synthesis flow
 - [ ] Sky130 technology mapping
 - [ ] OpenROAD physical design
 - [ ] OpenSTA timing analysis
